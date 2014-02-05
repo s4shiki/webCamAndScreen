@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<meta charset="UTF-8">
+		<title>IPU Festival 2013 Commemorative Photo</title>
+		<style>
+			<!-- #monitor{margin: -10px;} -->
+			#selector{margin: 10px;}
+			<!-- div#canvases{margin: 10px;} -->
+			<!-- div#buttons1{width: 60px; margin: -10px 0px 0px 0px} -->
+			<!-- div#buttons2{width: 60px; margin: -10px 0px 0px 0px} -->
+			<!-- #frame1{width:60px; height: 115px; font-size: 19px}
+			#frame2{width:60px; height: 115px; font-size: 19px}
+			#frame3{width:60px; height: 115px; font-size: 19px}
+			#frame4{width:60px; height: 115px; font-size: 19px} -->
+			#decide{width:100px; height: 130px; margin: 3px 0px 0px 0px; font-size: 30px}
+			#syokyo{width:60px; height: 130px; margin: 8px 0px 0px 0px; font-size: 30px}
+			#encode{width:60px; height: 130px; margin: 8px 0px 0px 0px; font-size: 30px}
+		</style>
+			<link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.css" />
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.js"></script>
+		<script>
+			window.onload = function(){
+				if(navigator.webkitGetUserMedia){
+			var video = document.getElementById('monitor');
+			var photos = document.getElementById('photos');
+			var type = 'image/png';
+			
+			var base64;
+			var audio = new Audio("se2.ogg");
+			audio.preload = "auto";
+			
+			var f, c, p;
+			c = document.getElementById("combine");
+			f = document.getElementById("frame");
+			
+			var img_v, img_f, img_c, img_p;
+			
+			var context_c = c.getContext('2d');
+			var context_f = f.getContext('2d');
+			
+			var frame_on = false;
+			var frame_1 = false;
+			var frame_2 = false;
+			var frame_3 = false;
+			var frame_4 = false;
+			var get_bin = false;
+			
+			var videoSelect = document.querySelector("select#videoSource");
+			
+			function gotSources(sourceInfos) {
+				for (var i = 0; i != sourceInfos.length; ++i) {
+				var sourceInfo = sourceInfos[i];
+				var option = document.createElement("option");
+				option.value = sourceInfo.id;
+				if(sourceInfo.kind === 'video') {
+					option.text = sourceInfo.label || 'camera ' + (videoSelect.length + 1);
+					videoSelect.appendChild(option);
+				}
+				}
+			}
+			
+			function start(){
+				if (!!window.stream) {
+					video.src = null;
+					window.stream.stop();
+				}
+				var videoSource = videoSelect.value;
+				var constraints = {
+					video: {
+						optional: [{sourceId: videoSource}]
+					}
+				};
+				navigator.webkitGetUserMedia(constraints,succesCallback
+				);
+			}
+			
+				if(typeof MediaStreamTrack === 'undefind'){
+					alert('Cannot Use By Your Device');
+				}else{
+					MediaStreamTrack.getSources(gotSources);
+				}
+			
+			function succesCallback(stream){
+				window.stream = stream;
+				video.src = window.URL.createObjectURL(stream);
+				video.play();
+			}
+
+			videoSelect.onchange = start;
+
+			start();
+			
+			<!-- フレーム選択・撮影・消去・決定 -->
+				frame1.addEventListener('click', function(){
+					frame1 = true;
+					frame2 = false;
+					frame3 = false;
+					frame4 = false;
+					context_f.clearRect(0, 0, 640, 480);
+					img_f = new Image();
+					img_f.src = "images/Frame1.png";
+					img_f.onload = function(){
+						context_f.drawImage(img_f, 0, 0, 640, 480);
+					};
+				});
+				frame2.addEventListener('click', function(){
+					frame1 = false;
+					frame2 = true;
+					frame3 = false;
+					frame4 = false;
+					context_f.clearRect(0, 0, 640, 480);
+					img_f = new Image();
+					img_f.src = "images/Frame2.png";
+					img_f.onload = function(){
+						context_f.drawImage(img_f, 0, 0, 640, 480);
+					};
+				});
+				frame3.addEventListener('click', function(){
+					frame1 = false;
+					frame2 = false;
+					frame3 = true;
+					frame4 = false;
+					context_f.clearRect(0, 0, 640, 480);
+					img_f = new Image();
+					img_f.src = "images/Frame3.png";
+					img_f.onload = function(){
+						context_f.drawImage(img_f, 0, 0, 640, 480);
+					};
+				});
+				frame4.addEventListener('click', function(){
+					frame1 = false;
+					frame2 = false;
+					frame3 = false;
+					frame4 = true;
+					context_f.clearRect(0, 0, 640, 480);
+					img_f = new Image();
+					img_f.src = "images/Frame4.png";
+					img_f.onload = function(){
+						context_f.drawImage(img_f, 0, 0, 640, 480);
+					};
+				});
+				decide.addEventListener('click', function(){
+					audio.play();
+					img_v = context_c.drawImage(video, 0, 0, 640, 480);
+					frame_on = true;
+					if(frame_on == true){
+						if(frame1 = true){
+							img_f = new Image();
+							img_f.src = "images/Frame1.png"
+							img_f.onload = function(){
+								context_c.drawImage(img_f, 0, 0, 640, 480);
+							}
+						}
+						if(frame2 == true){
+							img_f = new Image();
+							img_f.src = "images/Frame2.png"
+							img_f.onload = function(){
+								context_c.drawImage(img_f, 0, 0, 640, 480);
+							}
+						}	
+						if(frame3 == true){
+							img_f = new Image();
+							img_f.src = "images/Frame3.png";
+							img_f.onload = function(){
+								context_c.drawImage(img_f, 0, 0, 640, 480);
+							}
+						}
+						if(frame4 == true){
+							img_f = new Image();
+							img_f.src = "images/Frame4.png";
+							img_f.onload = function(){
+								context_c.drawImage(img_f, 0, 0, 640, 480);
+							}
+						}
+					}
+				}
+				);
+				syokyo.addEventListener('click', function(){
+						context_c.clearRect(0,0,640,480);
+					}
+				);
+				encode.addEventListener('click', function(){
+					base64 = c.toDataURL();
+					var filename = (new Date()).getTime();
+					var blob = base64toBlob(base64);
+					saveBlob(blob, filename+".jpeg");
+				}
+				);
+				function base64toBlob(_base64){
+					var i;
+					var tmp = _base64.split(',');
+					var data = atob(tmp[1]);
+					var mime = tmp[0].split(':')[1].split(';')[0];
+					var buff = new ArrayBuffer(data.length);
+					var arr = new Uint8Array(buff);
+					for (i = 0; i < data.length; i++) {arr[i] = data.charCodeAt(i);}
+					var blob = new Blob([arr], { type: mime });
+					return blob;
+				}
+				function saveBlob(_blob,_file){
+					if( /*@cc_on ! @*/ false ){
+					// IEの場合
+						window.navigator.msSaveBlob(_blob, _file);
+					}else {
+						var url = (window.URL || window.webkitURL);
+						var data = url.createObjectURL(_blob);
+						var e = document.createEvent("MouseEvents");
+						e.initMouseEvent("click", true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+						var a = document.createElementNS("http://www.w3.org/1999/xhtml", "a");
+						a.href = data;
+						a.download = _file;   
+						a.dispatchEvent(e);
+					}
+				}
+				introduction.addEventListener('click', function(){
+					alert("使い方を説明するよ！");
+				})
+			};
+		};
+			</script>
+		</head>
+	<body>
+
+	<div data-role="header" data-theme="b">
+		<h1>カメラフレーム　アンドロイド版</h1>
+	</div>
+
+	<!-- 映像とフレーム選択 -->
+	<div>
+		<div>
+			<div style="position: absolute; left: 655px; top: 50px;">
+				<p data-role="button" id="frame1" data-inline="true" data-icon="arrow-l" data-iconpos="top">①</p>
+				<p data-role="button" id="frame2" data-inline="true" data-icon="arrow-l" data-iconpos="top">②</p>
+			</div>
+			<div style="position: absolute; left: 655px; top: 180px;">
+				<p data-role="button" id="frame3" data-inline="true" data-icon="arrow-l" data-iconpos="top">③</p>
+				<p data-role="button" id="frame4" data-inline="true" data-icon="arrow-l" data-iconpos="top">④</p>
+			</div>
+			<div id="video_in" style="position: absolute; left: 20px; top: 70px;">
+				<video id="monitor" autoplay style="z-index: 0" width="640" height="480"></video>
+			</div>
+			<div style="position: absolute; left: 655px; top:400px" data-role="controlgroup" data-type="">
+				<a data-role="button" id="decide"　>撮るよッ☆</a>
+				<a data-role="button" id="syokyo"　>戻すよッ☆</a>
+				<a data-role="button" id="encode"　>☆決定☆</a>
+				<select name="切り替え" id="videoSource" value="Change!"></select>
+			</div>
+		</div>
+	</div>
+		<div id="canvases">
+			<canvas id ="frame" width="640" height="480" style="position: absolute; left: 10px; top: 60px; z-index: 2"></canvas>
+			<canvas id ="combine" width="640" height="480" style="position: absolute; left: 10px; top: 60px; z-index: 1"></canvas>
+		</div>
+	
+	<div class="ui-grid-a" style="position: absolute; left:310px; top: 520px;"  >
+		<button id="introduction" data-inline="true" >使い方！</button>
+		<a href="../../IPUFesta2013/screen/input.html" data-role="button" data-inline="true">送信ページ！</a>
+	</div>
+
+	</body>
+</html>

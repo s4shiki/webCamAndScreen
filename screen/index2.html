@@ -1,0 +1,332 @@
+<? php require_once "see.php"; ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ja">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+	<title></title>
+
+<!--<link href="css/style.css" rel="stylesheet" />-->
+
+<style>
+
+div#box1{
+	position: relative;
+	top: -500px;
+	left: 20px;
+	float: left;
+	margin: 0;
+	width: 392px;
+	height: 385px;
+	background-image: url("bubble.png");
+	background-size: cover;
+	display: dable;
+}
+
+div#box2{
+	position: relative;
+	top: 0px;
+	left: 200px;
+	float: left;
+	margin: 0;
+	width: 392px;
+	height: 385px;
+	background-image: url("bubble.png");
+	background-size: cover;
+	display: dable;
+}
+
+div#box3{
+	position: relative;
+	top: 0px;
+	left: 200px;
+	float: left;
+	margin: 0;
+	width: 336px;
+	height: 330px;
+	background-image: url("bubble.png");
+	background-size: cover;
+	display: dable;
+}
+
+div#box4{
+	position: relative;
+	top: 0px;
+	left: 200px;
+	float: left;
+	margin: 0;
+	width: 280px;
+	height: 275px;
+	background-image: url("bubble.png");
+	background-size: cover;
+}
+
+div#subBox1{
+	position: absolute;
+	width: 392px;
+	height: 385px;
+  	text-align: center;
+  	display: table;
+}
+
+div#subBox2{
+	position: absolute;
+	width: 336px;
+	height: 330px;
+  	text-align: center;
+  	display: table;
+}
+
+div#subBox3{
+	position: absolute;
+	width: 280px;
+	height: 275px;
+  	text-align: center;
+  	display: table;
+}
+
+a#img1 {
+	display: table-cell;
+	vertical-align: middle;
+}
+
+a#img2 {
+	display: table-cell;
+	vertical-align: middle;
+}
+
+a#img3 {
+	display: table-cell;
+	vertical-align: middle;
+}
+
+
+</style>
+
+</head>
+<body>
+
+<div id="box1"><div id="subBox1"><a id="img1"><img src='see.php' width="272px" height="204px"></a></div></div>
+<div id="box2"><div id="subBox1"><a id="img1"><img src="see.php" width="272px" height="204px"></a></div></div>
+<div id="box3"><div id="subBox2"><a id="img2"><img src="see.php" width="232px" height="174px"></a></div></div>
+<div id="box4"><div id="subBox3"><a id="img3"><img src="see.php" width="196px" height="147px"></a></div></div>
+
+<script>
+/*画像オブジェクト*/
+var img = new Image();
+/*画像番号*/
+var id = 0;
+/* 画像サイズ */
+var width = 392;
+var height = 385;
+/* ウィンドウサイズ */
+var wh;
+var ww;
+/* bubble の位置（top） */
+var point1 = 500;
+var point2 = 500;
+var point3 = 500;
+var point4 = 500;
+/* 横位置の微調整 */
+var x = 100;
+/* bubble の表示範囲（ウィンドウの中心を基準とする） */
+var side = 150;
+var left1;
+var left2;
+var left3;
+var left4;
+/* 横移動の最高速度 */
+var max1 = 1;
+var max2 = 1.3;
+/* 横移動の加速度 */
+var a1 = 4;
+var a2 = -6;
+var a3 = -8;
+var a4 = 4;
+/* 横移動の速度 */
+var s1 = 0;
+var s2 = -0.7;
+var s3 = -0.3;
+var s4 = 0.8;
+
+/* 起動時の処理 */
+window.onload = function() {
+	/* スクロールバーを非表示 */
+	document.body.style.overflow = "hidden";
+	wh = getBrowserHeight();
+	ww = getBrowserWidth();
+	point1 = wh;
+	document.getElementById('box1').style.top = point1 + "px";
+	/* point1 と次の point1 の中間地点に point2 を指定 */
+	point2 = wh + (wh/2) + (width/2);
+	document.getElementById('box2').style.top = point2 + "px";
+	point3 = point1 - 50;
+	document.getElementById('box3').style.top = point3 + "px";
+	point4 = point2 - 50;
+	document.getElementById('box4').style.top = point4 + "px";
+	left1 = (ww/2) - width - side - x;
+	left2 = width + (side * 2) - x;
+	left3 = left1 + 160;
+	left4 = -900;
+	document.getElementById('box1').style.left = left1 + "px";
+	document.getElementById('box2').style.left = left2 + "px";
+	document.getElementById('box3').style.left = left3 + "px";
+	document.getElementById('box4').style.left = left4 + "px";
+	bubble();
+}
+
+/* bubble の動きを管理する再帰部分 */
+function bubble() {
+	window.setTimeout(function() {
+		if (point1 < (height * (-1) - 10)) {
+			point1 = resetPoint1(point1);
+		} else if (point2 < (height * (-1) - 10)) {
+			point2 = resetPoint2(point2);
+		} else if (point3 < (height * (-1) - 10)) {
+			point3 = resetPoint3(point3);
+		} else if (point4 < (height * (-1) - 10)) {
+			point4 = resetPoint4(point4);
+		} else {
+			move();
+		}
+		bubble();
+	}, 10);
+}
+/* box1 の位置のリセット */
+function resetPoint1(point1) {
+	point1 = wh;
+	var d = document.getElementById('subBox1');
+	d.style.top = point1 + 20 + "px";
+	changeImage(d, 1);
+	return point1;
+}
+
+/* box2 の位置のリセット */
+function resetPoint2(point2) {
+	wh = getBrowserHeight();
+	point2 = wh;
+	var d = document.getElementById('subBox2');
+	d.style.top = point2 + 20 + "px";
+	changeImage(d, 1);
+	return point2;
+}
+
+/* box3 の位置のリセット */
+function resetPoint3(point3) {
+	wh = getBrowserHeight();
+	point3 = wh;
+	var d = document.getElementById('subBox3');
+	d.style.top = point3 + 20 + "px";
+	changeImage(d, 2);
+	return point3;
+}
+
+/* box4 の位置のリセット */
+function resetPoint4(point4) {
+	wh = getBrowserHeight();
+	point4 = wh;
+	var d = document.getElementById('subBox4');
+	d.style.top = point4 + 20 + "px";
+	changeImage(d, 3);
+	return point4;
+}
+
+/* bubble の移動と位置情報の更新 */
+function move() {
+	/* bubble の縦移動と位置情報の更新 */
+	point1 = point1 - 0.5;
+	document.getElementById('box1').style.top = point1 + "px";
+	point2 = point2 - 0.5;
+	document.getElementById('box2').style.top = point2 + "px";
+	point3 = point3 - 0.5;
+	document.getElementById('box3').style.top = point3 + "px";
+	point4 = point4 - 0.5;
+	document.getElementById('box4').style.top = point4 + "px";
+	/* bubble の横移動 */
+	if (Math.abs(s1) >= max1)
+		a1 = a1 * (-1);
+	s1 = s1 + (a1/1000);
+	left1 = left1 + s1;
+	document.getElementById('box1').style.left = left1 + "px";
+	
+	if (Math.abs(s2) >= max1)
+		a2 = a2 * (-1);
+	s2 = s2 + (a2/1000);
+	left2 = left2 + s2;
+	document.getElementById('box2').style.left = left2 + "px";
+	
+	if (Math.abs(s3) >= max2)
+		a3 = a3 * (-1);
+	s3 = s3 + (a3/1000);
+	left3 = left3 + s3;
+	document.getElementById('box3').style.left = left3 + "px";
+	
+	if (Math.abs(s4) >= max2)
+		a4 = a4 * (-1);
+	s4 = s4 + (a4/1000);
+	left4 = left4 + s4;
+	document.getElementById('box4').style.left = left4 + "px";
+}
+
+/* ウィンドウの高さを求める */
+function getBrowserHeight() {
+    if ( window.innerHeight ) {
+        return window.innerHeight;
+    }
+    else if ( document.documentElement && document.documentElement.clientHeight != 0 ) {
+        return document.documentElement.clientHeight;
+    }
+    else if ( document.body ) {
+        return document.body.clientHeight;
+    }
+    return 0;
+}
+
+/* ウィンドウの幅を求める */
+function getBrowserWidth() {
+    if ( window.innerWidth ) {
+        return window.innerWidth;
+    }
+    else if ( document.documentElement && document.documentElement.clientWidth != 0 ) {
+        return document.documentElement.clientWidth;
+    }
+    else if ( document.body ) {
+        return document.body.clientWidth;
+    }
+    return 0;
+}
+
+/* 画像の置き換え（番号が大きい上位10件） */
+function changeImage(d, num) {
+	var url ='see.php?id=' + id;
+	img.src = url;
+	img.onload = function() { 
+		if (img.height <= img.width) {
+			 if (num == 1) {
+			 	d.innerHTML = '<a id="img1"><img src="'+img.src+'" width="272px" display="table-cell" vertical-align="middle"></a>';
+			 } else if (num == 2) {
+			 	d.innerHTML = '<a id="img2"><img src="'+img.src+'" width="232px" display="table-cell" vertical-align="middle"></a>';
+			 } else {
+			 	d.innerHTML = '<a id="img3"><img src="'+img.src+'" width="196px" display="table-cell" vertical-align="middle"></a>';
+			 }
+		} else {
+			if (num == 1) {
+				d.innerHTML = '<a id="img1"><img src="'+img.src+'" height="272px" display="table-cell" vertical-align="middle"></a>';
+			} else if (num == 2) {
+				d.innerHTML = '<a id="img2"><img src="'+img.src+'" height="232px" display="table-cell" vertical-align="middle"></a>';
+			} else {
+				d.innerHTML = '<a id="img3"><img src="'+img.src+'" height="196px" display="table-cell" vertical-align="middle"></a>';
+			}
+		}
+		id++;
+	} 
+	img.onerror = function() {
+		id = 0;
+	}
+}
+
+</script>
+
+<!--<script src="bubble.js"></script>-->
+
+</body>
+</html>

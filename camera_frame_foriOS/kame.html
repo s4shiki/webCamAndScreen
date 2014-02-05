@@ -1,0 +1,205 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<meta charset="UTF-8">
+		<title>IPU Festival 2013 Commemorative Photo</title>
+		<style>
+			#monitor{margin: -10px;}
+			#photos{margin: 10px;}
+			<!-- div#canvases{margin: 10px;} -->
+			div#buttons1{width: 60px; margin: -10px 0px 0px 0px}
+			div#buttons2{width: 60px; margin: -10px 0px 0px 0px}
+			#frame1{width:60px; height: 115px; margin: 2px 0px 0px 0px; font-size: 30px}
+			#frame2{width:60px; height: 115px; margin: 6px 0px 0px 0px; font-size: 30px}
+			#frame3{width:60px; height: 115px; margin: 6px 0px 0px 0px; font-size: 30px}
+			#frame4{width:60px; height: 115px; margin: 6px 0px 0px 0px; font-size: 30px}
+			<!-- #take{width:60px; height: 68px; margin:  font-size: 25px} -->
+			#syokyo{width:60px; height: 130px; margin: 6px 0px 0px 0px; font-size: 30px}
+			#composite{width: 60px; height:130px; margin: 6px 0px 0px 0px; font-size: 30px}
+			#encode{width:60px; height: 130px; margin: 6px 0px 0px 0px; font-size: 30px}
+		</style>
+		<script type="text/javascript" src="megapix-image.js"></script>
+		<script type="text/javascript" src="megapix-image.test.js"></script>
+		<script>
+			window.onload = function(){
+
+			var type = 'image/png';
+			var type2 = 'image/jpeg';
+			
+			var c, f, t, p;
+			c = document.getElementById("combine");
+			f = document.getElementById("frame");
+			t = document.getElementById("taken");
+			//p = document.getElementById("photos");
+
+			var img_t, img_f, img_c, img_p;
+			
+			var context_c = c.getContext('2d');
+			var context_f = f.getContext('2d');
+			var context_t = t.getContext('2d');
+			//var context_p = p.getContext('2d');
+			
+			var result;
+			var input = document.getElementById('input');
+			
+			var frame_on = false;
+			var set = false;
+			var frame_1 = false;
+			var frame_2 = false;
+			var frame_3 = false;
+			var frame_4 = false;
+			
+			var reader = new FileReader();
+
+			<!-- フレーム選択・撮影・消去・決定 -->
+				frame1.addEventListener('click', function(){
+					frame1 = true;
+					frame2 = false;
+					frame3 = false;
+					frame4 = false;
+					set = false;
+					context_f.clearRect(0, 0, 640, 480);
+					img_f = new Image();
+					img_f.src = "images/frame1.png";
+					img_f.onload = function(){
+						context_f.drawImage(img_f, 0, 0, 640, 480);
+					};
+				});
+				frame2.addEventListener('click', function(){
+					frame1 = false;
+					frame2 = true;
+					frame3 = false;
+					frame4 = false;
+					set = false;
+					context_f.clearRect(0, 0, 640, 480);
+					img_f = new Image();
+					img_f.src = "images/frame2.png";
+					img_f.onload = function(){
+						context_f.drawImage(img_f, 0, 0, 640, 480);
+					};
+				});
+				frame3.addEventListener('click', function(){
+					frame1 = false;
+					frame2 = false;
+					frame3 = true;
+					frame4 = false;
+					set = false;
+					context_f.clearRect(0, 0, 853, 480);
+					img_f = new Image();
+					img_f.src = "images/frame3.png";
+					img_f.onload = function(){
+						context_f.drawImage(img_f, 0, 0, 640, 480);
+					};
+				});
+				frame4.addEventListener('click', function(){
+					frame1 = false;
+					frame2 = false;
+					frame3 = false;
+					frame4 = true;
+					set = false;
+					context_f.clearRect(0, 0, 640, 480);
+					img_f = new Image();
+					img_f.src = "images/frame4.png";
+					img_f.onload = function(){
+						context_f.drawImage(img_f, 0, 0, 640, 480);
+					};
+				});
+				composite.addEventListener('click', function(){
+					img_t = new Image();
+					img_t.src = reader.result;
+					img_t.onload = function(){
+						context_c.drawImage(img_t, 0,0,640,480);
+					};
+					frame_on = true;
+					if(frame_on == true){
+						if(frame1 = true){
+							img_f = new Image();
+							img_f.src = "images/Frame1.png"
+							img_f.onload = function(){
+								context_c.drawImage(img_f, 0, 0, 640, 480);
+							}
+						}
+						if(frame2 == true){
+							img_f = new Image();
+							img_f.src = "images/Frame2.png"
+							img_f.onload = function(){
+								context_c.drawImage(img_f, 0, 0, 640, 480);
+							}
+						}	
+						if(frame3 == true){
+							img_f = new Image();
+							img_f.src = "images/Frame3.png";
+							img_f.onload = function(){
+								context_c.drawImage(img_f, 0, 0, 640, 480);
+							}
+						}
+						if(frame4 == true){
+							img_f = new Image();
+							img_f.src = "images/Frame4.png";
+							img_f.onload = function(){
+								context_c.drawImage(img_f, 0, 0, 640, 480);
+							}
+						}
+						set = true;
+					};
+				}
+				);
+				encode.addEventListener('click', function(){
+					img_p = c.toDataURL();
+					document.getElementById("complete").src = img_p;
+					}
+				);
+				
+				input.onchange = function(){
+					var file = input.files[0];
+					img_t = new MegaPixImage(file);
+					img_t.render(c,{ maxWidth: 640, maxHeight: 480});
+				};
+				syokyo.addEventListener('click', function(){
+					context_f.clearRect(0,0,640,480);
+					context_c.clearRect(0,0,640,480);
+					frame_on = false;
+					frame1 = false;
+					frame2 = false;
+					frame3 = false; 
+					frame4 = false;
+					set = false;
+				}
+				)
+			
+			};
+			</script>
+		</head>
+	<body>
+	<!-- 映像とフレーム選択 -->
+	<div>
+		<div id = "buttons1"  style="position: absolute; left: 0px; top: 10px">
+			<button id="frame1">①</button>
+			<button id="frame2">②</button>
+			<button id="frame3">③</button>
+			<button id="frame4">④</button>
+		</div>
+		
+		<div id = "buttons2" style="position: absolute; left: 706px; top: 10px">
+			<form>
+				<input type="file" accept = "image/*;capture" id ="input">
+			</form>
+			<button id="syokyo">戻る</button>
+			<button id="composite">合成</button>
+			<button id="encode">決定</button>
+		</div>
+
+		<div id="canvases">
+			<canvas id ="frame" width="640" height="480" style="position: absolute; left:64px; top: 0; z-index: 2"></canvas>
+			<canvas id ="combine" width="640" height="480" style="position: absolute; left:64px; top: 0; z-index: 1"></canvas>
+			<canvas id ="taken" width="auto" height="auto" style="position: absolute; left:64px; top: 0; z-index: 0"></canvas>
+		</div>
+	</div>
+
+	<div id="photos" style="position: absolute; left: 5x; top: 500px;">
+		<img id="complete">
+	</div>
+
+	</body>
+</html>
+			

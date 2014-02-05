@@ -1,0 +1,212 @@
+<? php require_once "see.php"; ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ja">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+	<title></title>
+
+<!--<link href="css/style.css" rel="stylesheet" />-->
+
+<style>
+
+div#box1{
+	position: relative;
+	top: -500px;
+	left: 20px;
+	float: left;
+	mragin: 0;
+	width: 336px;
+	height: 330px;
+	background-image: url("bubble.png");
+}
+
+div#box2{
+	position: relative;
+	top: 0px;
+	left: 200px;
+	float: left;
+	margin: 0;
+	width: 336px;
+	height: 330px;
+	background-image: url("bubble.png");
+}
+
+a#img {
+	position: relative;
+	top: 28px;
+	left: 90px;
+}
+
+img.bg {
+  /* Set rules to fill background */
+  min-height: 100%;
+  min-width: 1024px;
+  /* Set up proportionate scaling */
+  width: 100%;
+  height: auto;
+  /* Set up positioning */
+  position: fixed;
+  /* またはabsolute; */
+  top: 0;
+  left: 0;
+}
+
+
+</style>
+
+</head>
+<body>
+
+<img class="bg" src="background.jpg" alt="" />
+
+<div id="box1"><a id="img"><img src='see.php'  width="154px" height="274px"></a></div>
+<div id="box2"><a id="img"><img src="see.php" width="154px" height="274px"></a></div>
+
+<script>
+/*画像オブジェクト*/
+var img = new Image();
+/*画像番号*/
+var id = 0;
+/* 画像サイズ */
+var width = 336;
+var height = 330;
+/* ウィンドウサイズ */
+var wh;
+var ww;
+/* bubble の位置（top） */
+var point1 = 500;
+var point2 = 500;
+/* bubble の表示範囲（ウィンドウの中心を基準とする） */
+var side = 50;
+var left1;
+var left2;
+/* 横移動の最高速度 */
+var max = 1;
+/* 横移動の加速度 */
+var a1 = 4;
+var a2 = -4;
+/* 横移動の速度 */
+var s1 = 0;
+var s2 = 0.6;
+
+/* 起動時の処理 */
+window.onload = function() {
+	/* スクロールバーを非表示 */
+	document.body.style.overflow = "hidden";
+	wh = getBrowserHeight();
+	ww = getBrowserWidth();
+	point1 = wh;
+	document.getElementById('box1').style.top = point1 + "px";
+	/* point1 と point1 の中間地点に point2 を指定 */
+	point2 = wh + (wh/2) + (width/2);
+	document.getElementById('box2').style.top = point2 + "px";
+	left1 = (ww/2) - width - side;
+	left2 = width + (side * 2);
+	document.getElementById('box1').style.left = left1 + "px";
+	document.getElementById('box2').style.left = left2 + "px";
+	bubble();
+}
+
+/* bubble の動きを管理する再帰部分 */
+function bubble() {
+	window.setTimeout(function() {
+		if (point1 < (height * (-1) - 10)) {
+			point1 = resetPoint1(point1);
+		} else if (point2 < (height * (-1) - 10)) {
+			point2 = resetPoint2(point2);
+		} else {
+			move();
+		}
+		bubble();
+	}, 10);
+}
+/* box1 の位置のリセット */
+function resetPoint1(point1) {
+	point1 = wh;
+	var d = document.getElementById('box1');
+	d.style.top = point1 + 20 + "px";
+	changeImage(d);
+	return point1;
+}
+
+/* box2 の位置のリセット */
+function resetPoint2(point2) {
+	wh = getBrowserHeight();
+	point2 = wh;
+	var d = document.getElementById('box2');
+	d.style.top = point2 + 20 + "px";
+	changeImage(d);
+	return point2;
+}
+
+/* bubble の移動と位置情報の更新 */
+function move() {
+	/* bubble の縦移動と位置情報の更新 */
+	point1 = point1 - 0.5;
+	document.getElementById('box1').style.top = point1 + "px";
+	point2 = point2 - 0.5;
+	document.getElementById('box2').style.top = point2 + "px";
+	/* bubble の横移動 */
+	if (Math.abs(s1) >= max)
+		a1 = a1 * (-1);
+	s1 = s1 + (a1/1000);
+	left1 = left1 + s1;
+	document.getElementById('box1').style.left = left1 + "px";
+	if (Math.abs(s2) >= max)
+		a2 = a2 * (-1);
+	s2 = s2 + (a2/1000);
+	left2 = left2 + s2;
+	document.getElementById('box2').style.left = left2 + "px";
+}
+
+/* ウィンドウの高さを求める */
+function getBrowserHeight() {
+    if ( window.innerHeight ) {
+        return window.innerHeight;
+    }
+    else if ( document.documentElement && document.documentElement.clientHeight != 0 ) {
+        return document.documentElement.clientHeight;
+    }
+    else if ( document.body ) {
+        return document.body.clientHeight;
+    }
+    return 0;
+}
+
+/* ウィンドウの幅を求める */
+function getBrowserWidth() {
+    if ( window.innerWidth ) {
+        return window.innerWidth;
+    }
+    else if ( document.documentElement && document.documentElement.clientWidth != 0 ) {
+        return document.documentElement.clientWidth;
+    }
+    else if ( document.body ) {
+        return document.body.clientWidth;
+    }
+    return 0;
+}
+
+/* 画像の置き換え（番号が大きい上位10件） */
+function changeImage(d) {
+	var url ='see.php?id=' + id;
+	img.src = url;
+	img.onload = function() { 
+		if (img.height <= img.width) {
+			d.innerHTML = '<a id="img"><img src="'+img.src+'" width="154px"></a>';
+		} else {
+			d.innerHTML = '<a id="img"><img src="'+img.src+'" height="274px"></a>';
+		}
+		id++;
+	} 
+	img.onerror = function() {
+		id = 0;
+	}
+}
+
+</script>
+
+<!--<script src="bubble.js"></script>-->
+
+</body>
+</html>

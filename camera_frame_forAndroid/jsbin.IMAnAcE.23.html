@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="ja">
+<!--
+  Created using jsbin.com
+  Source can be edited via http://jsbin.com/IMAnAcE/23/edit
+-->
+<head>
+    <meta charset="UTF-8">
+    <title>IPUFestaCamera</title>
+  <style>
+			#monitor{margin: -10px;}
+			#selector{margin: 10px;}
+			<!-- div#canvases{margin: 10px;} -->
+			<!-- div#buttons1{width: 60px; margin: -10px 0px 0px 0px} -->
+			<!-- div#buttons2{width: 60px; margin: -10px 0px 0px 0px} -->
+			#frame1{width:60px; height: 115px; margin: 2px 0px 0px 0px; font-size: 30px}
+			#frame2{width:60px; height: 115px; margin: 6px 0px 0px 0px; font-size: 30px}
+			#frame3{width:60px; height: 115px; margin: 6px 0px 0px 0px; font-size: 30px}
+			#frame4{width:60px; height: 115px; margin: 6px 0px 0px 0px; font-size: 30px}
+			#decide{width:60px; height: 130px; margin: 3px 0px 0px 0px; font-size: 30px}
+			#syokyo{width:60px; height: 130px; margin: 8px 0px 0px 0px; font-size: 30px}
+			#encode{width:60px; height: 130px; margin: 8px 0px 0px 0px; font-size: 30px}
+		</style>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css" />
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js"></script>
+
+<style id="jsbin-css">
+#monitor{margin: -10px;}
+			#selector{margin: 10px;}
+			<!-- div#canvases{margin: 10px;} -->
+			<!-- div#buttons1{width: 60px; margin: -10px 0px 0px 0px} -->
+			<!-- div#buttons2{width: 60px; margin: -10px 0px 0px 0px} -->
+			#frame1{width:60px; height: 115px; margin: 2px 0px 0px 0px; font-size: 30px}
+			#frame2{width:60px; height: 115px; margin: 6px 0px 0px 0px; font-size: 30px}
+			#frame3{width:60px; height: 115px; margin: 6px 0px 0px 0px; font-size: 30px}
+			#frame4{width:60px; height: 115px; margin: 6px 0px 0px 0px; font-size: 30px}
+			#decide{width:60px; height: 130px; margin: 3px 0px 0px 0px; font-size: 30px}
+			#syokyo{width:60px; height: 130px; margin: 8px 0px 0px 0px; font-size: 30px}
+			#encode{width:60px; height: 130px; margin: 8px 0px 0px 0px; font-size: 30px}
+</style>
+</head>
+<body>
+  
+<div data-role="page" id="home">
+  <!-- frame panel -->
+  <div data-role="panel" id="panel_frame" data-display="overlay">
+    <div class="ui-grid-c">
+				<button id="frame1" data-inline="true">　　　　①　　　　</button>
+				<button id="frame2" data-inline="true">　　　　②　　　　</button>
+				<button id="frame3" data-inline="true">　　　　③　　　　</button>
+				<button id="frame4" data-inline="true">　　　　④　　　　</button>
+			</div>
+  </div>
+  <!-- frame panel -->
+  
+    <div data-role="header" data-theme="b">
+      <h1>IPUFestaカメラ</h1>
+      <a href="#page_help" class="ui-btn-left">使い方</a>
+      <a href="#panel_frame" class="ui-btn-right">フレーム</a>
+    </div>
+    <div data-role="content">
+    
+    <!-- Camera -->
+    <div>
+		<div>
+          <p style="position: relative;">
+		    <video autoplay width="640" height="480"></video>
+            <canvas id ="frame" width="640" height="480" style="position: absolute; left:0px; top: 0px; z-index: 2"></canvas>
+          </p>
+		</div>
+	</div>
+    <!-- Camera -->
+    <a href="#page_shot" id="shot" type="button" data-theme="e">撮影</a>
+    </div>
+</div>
+  
+<div data-role="page" id="page_help" data-add-back-btn="true">
+    <div data-role="header">
+        <h1>使い方</h1>
+    </div>
+    <div data-role="content">
+        <p>いろいろです。</p>
+        <p><a href="#home">ホーム</a></p>
+        <p><a href="#menu">メニュー</a></p>
+    </div>
+    <div data-role="footer">
+        <h4>Copyright 2012</h4>
+    </div>
+</div>
+  
+
+<div data-role="page" id="page_shot" data-add-back-btn="true">
+    <div data-role="header">
+        <h1>撮影</h1>
+    </div>
+    <div data-role="content">
+        <img src="" width="640" height="480" >
+		<canvas id ="combine" style="display:none;" width="640" height="480"></canvas>
+    </div>
+    <div data-role="footer">
+        <h4>Copyright 2012</h4>
+    </div>
+</div>
+
+<div data-role="page" id="page_save" data-add-back-btn="true">
+    <div data-role="header">
+        <h1>写真をスクリーンに送る</h1>
+    </div>
+    <div data-role="content">
+        <p>いろいろです。</p>
+        <p><a href="#home">ホーム</a></p>
+        <p><a href="#menu">メニュー</a></p>
+    </div>
+    <div data-role="footer">
+        <h4>Copyright 2012</h4>
+    </div>
+</div>
+  
+<div data-role="page" id="page_upload" data-add-back-btn="true">
+    <div data-role="header">
+        <h1>写真をスクリーンに送る</h1>
+    </div>
+    <div data-role="content">
+        <p>いろいろです。</p>
+        <p><a href="#home">ホーム</a></p>
+        <p><a href="#menu">メニュー</a></p>
+    </div>
+    <div data-role="footer">
+        <h4>Copyright 2012</h4>
+    </div>
+</div>
+  
+
+<script>
+var f, c;
+f = document.getElementById("frame"); //フレームID取得
+c = document.getElementById("combine"); //撮影用ID取得
+var context_f = f.getContext('2d'); //フレーム用Canvas取得
+var context_c = c.getContext('2d'); //撮影用Canvas取得
+
+        var video = document.querySelector('video');
+        var canvas = document.querySelector('canvas');
+        var ctx = canvas.getContext('2d');
+        var localMediaStream = null;
+ 
+        //カメラ使えるかチェック
+        var hasGetUserMedia = function() {
+          return !!(navigator.getUserMedia ||
+                    navigator.webkitGetUserMedia ||
+                    navigator.mozGetUserMedia ||
+                    navigator.msGetUserMedia);
+        };
+        //エラー
+        var onFailSoHard = function(e) {
+            console.log('エラー!', e);
+        };
+ 
+        //カメラ画像キャプチャ
+        var snapshot = function() {
+            if (localMediaStream) {
+                ctx.drawImage(video, 0, 0);
+                document.querySelector('img').src = canvas.toDataURL('image/webp');
+            }
+        };
+ 
+        if (hasGetUserMedia()) {
+            console.log("カメラ OK");
+        } else {
+            alert("未対応ブラウザです。");
+        }
+
+        //フレームチェンジ
+        var framechange = function() {
+          console.log("function_framechange");
+          frame1 = true;
+		  frame2 = false;
+		  frame3 = false;
+     	  frame4 = false;
+		  context_f.clearRect(0, 0, 640, 480);
+		  img_f = new Image();
+		  img_f.src = "images/Frame1.png";
+          //img_f.src = "http://fsymbols.com/images/mario-flower.png";
+		  img_f.onload = function(){
+		  context_f.drawImage(img_f, 0, 0, 640, 480);
+		  };
+        };
+
+        // 撮影
+        var snapshot = function(){
+          console.log("snapshot");
+					img_v = context_c.drawImage(video, 0, 0, 640, 480);
+          //img_v = ctx.drawImage(monitor, 0, 0, 640, 480);
+                    document.querySelector('img').src = c.toDataURL('image/webp');
+					frame_on = true;
+					if(frame_on == true){
+						if(frame1 = true){
+							img_f = new Image();
+							img_f.src = "images/Frame1.png"
+							img_f.onload = function(){
+								context_c.drawImage(img_f, 0, 0, 640, 480);
+							}
+						}
+						if(frame2 == true){
+							img_f = new Image();
+							img_f.src = "images/Frame2.png"
+							img_f.onload = function(){
+								context_c.drawImage(img_f, 0, 0, 640, 480);
+							}
+						}	
+						if(frame3 == true){
+							img_f = new Image();
+							img_f.src = "images/Frame3.png";
+							img_f.onload = function(){
+								context_c.drawImage(img_f, 0, 0, 640, 480);
+							}
+						}
+						if(frame4 == true){
+							img_f = new Image();
+							img_f.src = "images/Frame4.png";
+							img_f.onload = function(){
+								context_c.drawImage(img_f, 0, 0, 640, 480);
+							}
+						}
+					}
+				};
+ 
+        window.URL = window.URL || window.webkitURL;
+        navigator.getUserMedia  = navigator.getUserMedia || navigator.webkitGetUserMedia ||
+                                  navigator.mozGetUserMedia || navigator.msGetUserMedia;
+ 
+        navigator.getUserMedia({video: true}, function(stream) {
+          video.src = window.URL.createObjectURL(stream);
+          localMediaStream = stream;
+        }, onFailSoHard);
+ 
+        //ボタンイベント
+        $("#shot").click(function() {
+            console.log("shot");
+            snapshot();
+        });
+        $("#stop").click(function() {
+            console.log("stop");
+            localMediaStream.stop();
+        });
+        //ボタンイベント-フレームチェンジ
+$("#frame1").click(function() {
+  console.log("button_frame1");
+  framechange();
+});
+</script>
+</body>
+</html>
